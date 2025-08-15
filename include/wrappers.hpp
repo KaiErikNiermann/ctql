@@ -182,6 +182,19 @@ namespace ctql {
         static constexpr std::size_t size = T::size;
     };
 
+    template <typename T> 
+    struct SizeOf {
+        using type = T;
+        static constexpr std::size_t size = sizeof(T);
+    };
+
+    template <typename T> 
+    struct AlignOf {
+        using type = T;
+        static constexpr std::size_t size = alignof(T);
+    };
+
+
 
     template <typename Cmp, HasStaticSize A, HasStaticSize B>
     struct cmp {
@@ -272,7 +285,25 @@ namespace ctql {
         HTList(T...) -> HTList<T...>;
     } // namespace detail
 
+    template <typename... Ts>
+    using Size_t = detail::HTList<Size<Ts>...>;
+
+    template <typename... Ts> 
+    using SizeOf_t = detail::HTList<SizeOf<Ts>...>;
+    
+    template <typename... Ts>
+    using AlignOf_t = detail::HTList<AlignOf<Ts>...>;
+    
+    template <template<typename> class S, typename... Ts>
+    using Apply = detail::HTList<S<Ts>...>; 
+
+#define $size_of(...) ctql::SizeOf_t<__VA_ARGS__>
+
+#define $align_of(...) ctql::AlignOf_t<__VA_ARGS__>
+
 #define $type_list(...) detail::HTList<__VA_ARGS__>
+
+#define $apply(S, ...) ctql::Apply<S, __VA_ARGS__>
 
     namespace detail {
         template <typename Pivot, template <typename, typename> class Rel, typename List>

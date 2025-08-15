@@ -6,6 +6,11 @@ Header-only C++23 toolkit to **filter/partition/sort/reduce *types*** using user
 * **Standard:** C++23
 * **Compiler:** Clang++ 18 (tested)
 
+--- 
+## Examples 
+
+For examples see [here](https://github.com/KaiErikNiermann/ctql/tree/main/examples). 
+
 ---
 
 ## Why ctql?
@@ -27,123 +32,6 @@ clang++-18 -std=c++23 -Wall -Wextra -pedantic demo.cpp -Ipath/to/ctql
 ```cpp
 #include <ctql/ctql.hpp>
 using namespace ctql;
-```
-
----
-
-## Quick tour
-
-We’ll use the **KeyOf** wrapper pattern: turn a concrete type `T` into a meta “row” with a `static constexpr size` and `using type = T;`.
-
-```cpp
-// Key extractors (you can define your own)
-template <class T>
-struct SizeOf { using type = T; static constexpr std::size_t size = sizeof(T); };
-
-template <class T>
-struct AlignOf { using type = T; static constexpr std::size_t size = alignof(T); };
-
-// A simple binary relation: keep Elem if Elem.size <= Pivot.size
-template <class Pivot, class Elem>
-struct leq_size { static constexpr bool value = (Elem::size <= Pivot::size); };
-```
-
-### 1) Sort types by a key (ascending/descending)
-
-```cpp
-#include <tuple>
-#include <type_traits>
-#include <ctql/ctql.hpp>
-using namespace ctql;
-
-struct A { double x[4]; }; // 32B
-struct B { int    y;    }; // 4B
-struct C { char   z[9]; }; // 9B
-
-// Sort by sizeof ascending, then materialize into a tuple:
-using SortedWrappers = TypeSort<Order::Asc, SizeOf, A, B, C>;   // HTList<SizeOf<B>, SizeOf<C>, SizeOf<A>>
-using SortedTuple    = typename to_tuple<SortedWrappers>::type; // std::tuple<B, C, A>
-
-static_assert(std::is_same_v<SortedTuple, std::tuple<B, C, A>>);
-
-// Sort by alignof descending:
-using AlignSorted = TypeSort<Order::Desc, AlignOf, A, B, C>;
-using AlignTuple  = typename to_tuple<AlignSorted>::type; // order depends on alignof(...)
-```
-
-### 2) Partition once, get both buckets
-
-Useful for small-buffer optimization (inline vs heap), MTU budgets, feature gates, etc.
-
-```cpp
-// Threshold/pivot type:
-struct Inline32 { static constexpr std::size_t size = 32; };
-
-// Build wrapped set:
-using Set = HTList<SizeOf<A>, SizeOf<B>, SizeOf<C>>;
-
-// One pass: pass = <= 32B, fail = > 32B
-using P = partition_by<Inline32, leq_size, SizeOf<A>, SizeOf[B], SizeOf<C]>;
-
-using FitsInlineWrappers = typename P::pass; // HTList<SizeOf<B>, SizeOf<C> >
-using NeedsHeapWrappers  = typename P::fail; // HTList<SizeOf<A>>
-
-// Project to convenient shapes:
-using FitsInline = typename to_variant<FitsInlineWrappers>::type; // std::variant<B, C>
-using NeedsHeap  = typename to_variant<NeedsHeapWrappers>::type;  // std::variant<A>
-```
-
-### 3) Reduce (sum/min/max) over the key
-
-```cpp
-// Predefined reducers: add_i, min_i, max_i
-using TotalBytes = reduce_sizes_t<add_i, 0, SizeOf<A>, SizeOf<B>, SizeOf<C>>;
-static_assert(TotalBytes::value == sizeof(A) + sizeof(B) + sizeof(C));
-
-// Convenience alias:
-template <typename... Ts>
-using Sum = reduce_sizes_t<add_i, 0, Ts...>;
-static_assert(Sum<SizeOf<A>, SizeOf<B>>::value == sizeof(A) + sizeof(B));
-```
-
----
-
-## Minimal demo (copy/paste)
-
-```cpp
-#include <ctql/ctql.hpp>
-#include <tuple>
-#include <type_traits>
-using namespace ctql;
-
-struct X { double d[2]; }; // 16B
-struct Y { int    i;    }; // 4B
-struct Z { char   c[3]; }; // 3B
-
-template <class T> struct SizeOf { using type = T; static constexpr std::size_t size = sizeof(T); };
-template <class P, class E> struct leq_size { static constexpr bool value = (E::size <= P::size); };
-
-int main() {
-  using Sorted = TypeSort<Order::Asc, SizeOf, X, Y, Z>;
-  using Tup    = typename to_tuple<Sorted>::type;
-  static_assert(std::is_same_v<Tup, std::tuple<Z, Y, X>>);
-
-  struct Cap8 { static constexpr std::size_t size = 8; };
-  using P = partition_by<Cap8, leq_size, SizeOf<X>, SizeOf<Y>, SizeOf<Z>>;
-  using Small = typename to_tuple<typename P::pass>::type; // <= 8B
-  using Big   = typename to_tuple<typename P::fail>::type; // > 8B
-  static_assert(std::is_same_v<Small, std::tuple<Y, Z>>);
-  static_assert(std::is_same_v<Big,   std::tuple<X>>);
-
-  using Total = reduce_sizes_t<add_i, 0, SizeOf<X>, SizeOf<Y>, SizeOf<Z>>;
-  static_assert(Total::value == sizeof(X)+sizeof(Y)+sizeof(Z));
-}
-```
-
-Build:
-
-```bash
-clang++-18 -std=c++23 demo.cpp -Iinclude
 ```
 
 ---
