@@ -1,3 +1,4 @@
+#define CTQL_ENABLE_DSL
 #include <ctql.hpp>
 
 using namespace ctql;
@@ -24,8 +25,6 @@ struct F {
 // ---- sorting ----
 
 static_assert($type_eq($sort_types(A, B, C, D, E, F), $tuple_t(C, A, D, B, F, E)));
-
-static_assert($type_eq($sort_types(A), $tuple_t(A)));
 
 static_assert($type_eq($sort_types(A), $tuple_t(A)));
 

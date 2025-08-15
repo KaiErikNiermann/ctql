@@ -1,0 +1,14 @@
+.. _exhale_define_macros_8hpp_1a42b531965d8785aa04fd608870868b52:
+
+Define CTQL_SORT_TYPES_ASC
+==========================
+
+- Defined in :ref:`file_include_macros.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: CTQL_SORT_TYPES_ASC
+   :project: ctql

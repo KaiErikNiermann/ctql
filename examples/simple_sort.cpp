@@ -1,4 +1,4 @@
-#include "wrappers.hpp"
+#define CTQL_ENABLE_DSL
 #include <tuple>
 #include <type_traits>
 #include <ctql.hpp>

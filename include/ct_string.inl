@@ -7,8 +7,8 @@
 namespace ctql {
     template <size_t N>
     struct ct_string {
-        std::array<char, N + 1> data {}; 
-        
+        std::array<char, N + 1> data {};
+
         constexpr ct_string() = default;
 
         constexpr ct_string(const char (&str)[N + 1]) {
@@ -20,9 +20,7 @@ namespace ctql {
 
         constexpr std::size_t size() const { return N; }
 
-        constexpr operator std::string_view() const {
-            return {data.data(), N};
-        }
+        constexpr operator std::string_view() const { return {data.data(), N}; }
     };
 
     template <std::size_t N>
@@ -82,12 +80,12 @@ namespace ctql {
             : Lambda_t(std::move(lambda))... { }
     };
 
-#define $match(arg, ...) std::invoke(ctql::match{__VA_ARGS__}, arg)
+#define $match(arg, ...) std::invoke(ctql::match {__VA_ARGS__}, arg)
 
-    template<class... Ts, class Fn>
+    template <class... Ts, class Fn>
     constexpr void foreach_indexed(Fn&& fn) {
         [&]<std::size_t... Is>(std::index_sequence<Is...>) {
             (std::forward<Fn>(fn).template operator()<Ts, Is>(), ...);
-        }(std::index_sequence_for<Ts...>{});
+        }(std::index_sequence_for<Ts...> {});
     }
 }

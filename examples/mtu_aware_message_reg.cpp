@@ -46,7 +46,7 @@ using MsgSet
     = $type_list(WireSizeOf<MsgLogin>, WireSizeOf<MsgPing>, WireSizeOf<MsgChunk>, WireSizeOf<MsgTelemetry>);
 
 // Partition in one pass (<= MTU vs > MTU)
-using P = $partition_by_key(/* key = */ WireSizeOf, MTU1200, leq_size, MsgLogin, MsgPing, MsgChunk, MsgTelemetry);
+using P = $partition_by_key( /* key = */ WireSizeOf, MTU1200, leq_size, MsgLogin, MsgPing, MsgChunk, MsgTelemetry);
 
 using FitsMtuSet = typename P::pass; // HTList<WireSizeOf<...>>
 using TooBigSet  = typename P::fail;

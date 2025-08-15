@@ -1,0 +1,14 @@
+.. _exhale_define_macros_8hpp_1a2fd5730d1b416107843304b17398e1a5:
+
+Define CTQL_PARTITION_BY_KEY
+============================
+
+- Defined in :ref:`file_include_macros.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: CTQL_PARTITION_BY_KEY
+   :project: ctql
