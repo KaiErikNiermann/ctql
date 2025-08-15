@@ -108,36 +108,6 @@ static_assert(Sum<SizeOf<A>, SizeOf<B>>::value == sizeof(A) + sizeof(B));
 
 ---
 
-## Core API (cheat sheet)
-
-* **Type list**
-
-  * `template<class... Ts> struct HTList;`
-  * `append<HTList<Xs...>, HTList<Ys...>>::type  // HTList<Xs..., Ys...>`
-  * `to_tuple<HTList<Wrap<Ts>...>>::type         // std::tuple<Ts...>`
-  * `to_variant<HTList<Wrap<Ts>...>>::type       // std::variant<Ts...>`
-
-* **Sort**
-
-  * `enum class Order { Asc, Desc };`
-  * `TypeSort<Order, KeyOf, Ts...>` → `HTList<KeyOf<Ts>...>` sorted by `KeyOf<T>::size`
-
-* **Partition**
-
-  * `partition_by<Pivot, Rel, Ts...>` → `{ using pass, using fail; }`
-  * `filter_by<Pivot, Rel, Ts...>`    → `pass`
-  * `reject_if_by<Pivot, Rel, Ts...>` → `fail`
-  * `Rel<Pivot, Elem>::value` is any binary relation you define (e.g. `leq_size`)
-
-* **Reduce**
-
-  * `reduce_sizes_t<Op, Init, Ts...>` → `std::integral_constant<std::size_t, ...>`
-  * Built-ins: `add_i`, `min_i`, `max_i`
-
-> ℹ️ A **KeyOf** is any `template<class T> struct KeyOf { using type = T; static constexpr std::size_t size = ...; };`
-
----
-
 ## Minimal demo (copy/paste)
 
 ```cpp
