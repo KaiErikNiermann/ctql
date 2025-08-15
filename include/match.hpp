@@ -13,7 +13,7 @@
 ///
 /// ### Example
 ///
-/// ```cpp
+/// @code{.cpp}
 /// using A = struct A_;
 /// using B = struct B_;
 /// using D = struct D_;
@@ -28,7 +28,7 @@
 /// // If no case matches and no default_ is provided, result is void:
 /// using R2 = ctql::match_t<42, ctql::case_<0, A>>;
 /// static_assert(std::is_void_v<R2>);
-/// ```
+/// @endcode
 ///
 /// @note Keys are compared with `==` at compile time. This works for integral,
 ///       enum, and other literal NTTPs that support `constexpr` equality.

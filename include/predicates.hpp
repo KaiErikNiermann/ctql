@@ -16,9 +16,9 @@
 ///   whose `template pred<L,R>` can be used in algorithms (e.g. partition/sort).
 /// - Helpers `Size_t`, `SizeOf_t`, `AlignOf_t`, and `Apply<S,...>` create keyed typelists.
 ///
-/// **Example**
+/// ### Example
 ///
-/// ```cpp
+/// @code{.cpp}
 /// struct A { static constexpr std::size_t size = 3; };
 /// struct B { static constexpr std::size_t size = 5; };
 ///
@@ -26,7 +26,7 @@
 /// static_assert(LT::template pred<A,B>::value); // 3 < 5
 ///
 /// using Keys = ctql::Size_t<A,B>;              // HTList<Size<A>, Size<B>>
-/// ```
+/// @endcode
 
 namespace ctql {
 
@@ -134,10 +134,10 @@ namespace ctql {
      *
      * **Example**
      *
-     * ```cpp
+     * @code{.cpp}
      * using Tag = ctql::op_type<">="_ct>;
      * static_assert(Tag::template pred<A,B>::value == (A::size >= B::size));
-     * ```
+     * @endcode     
      */
     template <ct_string str>
     using op_type = ctql::match_t<

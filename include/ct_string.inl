@@ -156,7 +156,7 @@ namespace ctql {
      * @param fn   A callable whose `operator()` is a template taking `<T, I>`.
      *
      * @usage
-     * @code
+     * @code{.cpp}
      * struct printer {
      *   template<class T, std::size_t I>
      *   void operator()() const {

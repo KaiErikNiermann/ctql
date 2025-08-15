@@ -28,5 +28,6 @@ exhale_args = {
     "createTreeView": True,
 }
 
-# Theme: feel free to keep alabaster; these look cleaner:
+# set theme to rtd
+html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]

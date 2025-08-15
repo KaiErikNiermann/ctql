@@ -12,24 +12,24 @@
 /// Order is controlled by `Order::{Asc,Desc}` and comparisons are routed through
 /// `op_type<"...">` predicates like `"<"_ct`, `">="_ct`, etc.
 ///
-/// **Example**
+/// ### Example
 ///
-/// ```cpp
+/// @code{.cpp}
 /// struct A { static constexpr std::size_t size = 3; };
 /// struct B { static constexpr std::size_t size = 1; };
 /// struct C { static constexpr std::size_t size = 2; };
 ///
 /// using L = ctql::detail::HTList<A, B, C>;
 /// using Sorted = ctql::sort_list<ctql::Order::Asc, L>::type; // ==> HTList<B, C, A>
-/// ```
+/// @endcode
 ///
 /// **Key mapping with @ref TypeSort**
 ///
-/// ```cpp
+/// @code{.cpp}
 /// // If Size<T> is a "key" type that itself satisfies HasStaticSize (e.g., Size<T>::size = T::size),
 /// // TypeSort produces a list of the keys (not the original Ts):
 /// using Out = ctql::TypeSort<ctql::Order::Asc, ctql::Size, A, B, C>; // HTList<Size<B>, Size<C>, Size<A>>
-/// ```
+/// @endcode
 ///
 /// @note This is a quicksort-style split on the first element; it is not stable.
 /// @complexity Expected O(n log n) template instantiations; worst-case O(n^2).
@@ -103,11 +103,11 @@ namespace ctql {
      *
      * **Example**
      *
-     * ```cpp
+     * @code{.cpp}
      * // Suppose Size<T> is a key-type with Size<T>::size == T::size.
      * using SortedKeys = ctql::TypeSort<ctql::Order::Asc, ctql::Size, A, B, C>;
      * // => HTList<Size<B>, Size<C>, Size[A]>
-     * ```
+     * @endcode
      *
      * @note This alias sorts the *key types* `KeyOf<Ts>`, not the original `Ts`.
      *       If you need the original `Ts` in sorted order, carry them alongside
