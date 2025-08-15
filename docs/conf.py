@@ -6,7 +6,7 @@ author = "Kai Erik Niermann"
 extensions = ["breathe", "exhale"]
 
 # If you run doxygen yourself, keep this and point to the XML dir:
-breathe_projects = {"ctql": "../build/doxygen/xml"}
+breathe_projects = {"ctql": "doxygen/xml"}
 breathe_default_project = "ctql"
 
 # Nice defaults for C++
