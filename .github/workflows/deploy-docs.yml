@@ -27,6 +27,8 @@ jobs:
             python3-sphinx \
             python3-sphinx-rtd-theme \
             python3-myst-parser \
+            python3-breathe \
+            python3-exhale \
             doxygen \
             graphviz \
             make
