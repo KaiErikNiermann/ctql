@@ -41,7 +41,3 @@ using namespace ctql;
 * Works with any “size” metric you provide: `sizeof`, `alignof`, protocol bytes, priorities, etc.
 * Sorting uses a pivot-partition strategy; equals go to the “right” bucket by default (deterministic, not stable).
 * Everything is `constexpr`/type-level; no runtime overhead.
-
----
-
-If you want a fancier DSL (e.g., `"lt"_op` tags), `ctql` ships tiny operator tags & UDLs too—keep an eye on `predicate.hpp` inside the header.
