@@ -13,11 +13,11 @@
 /// Complexity is linear in the number of types.
 ///
 /// ### Example
-/// @code
+/// ```cpp
 /// struct A { static constexpr std::size_t size = 3; };
 /// struct B { static constexpr std::size_t size = 5; };
 /// static_assert(ctql::Sum_v<A,B> == 8);
-/// @endcode
+/// ```
 ///
 /// @note Works at compile time only; results are `std::integral_constant<size_t, ...>` or a value thereof.
 
