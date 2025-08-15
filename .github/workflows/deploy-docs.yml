@@ -30,6 +30,14 @@ jobs:
             python3-exhale \
             make
 
+      - name: Run doxygen
+        run: |
+          # Ensure Doxygen is installed
+          sudo apt-get install -y doxygen graphviz
+
+          # Run Doxygen to generate XML output
+          doxygen Doxyfile
+
       - name: Build Sphinx HTML
         run: |
           # Use sphinx-build directly (doesn't depend on Poetry or pip)
