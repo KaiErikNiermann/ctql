@@ -3,7 +3,7 @@
 #include "htlist.hpp"
 
 namespace ctql {
-       enum class Order { Asc, Desc };
+    enum class Order { Asc, Desc };
 
     template <Order Ord, typename List>
     struct sort_list;

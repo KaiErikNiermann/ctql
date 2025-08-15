@@ -21,7 +21,7 @@ namespace ctql {
         template <auto Key, class Default, bool Matched, class... Alts>
         struct match_impl;
 
-        // end of list → yield accumulated Default
+        // end of list -> yield accumulated Default
         template <auto Key, class Default, bool Matched>
         struct match_impl<Key, Default, Matched> {
             using type = Default;
@@ -41,7 +41,7 @@ namespace ctql {
         struct match_impl<Key, Default, Matched, default_<T>, Rest...>
             : match_impl<Key, std::conditional_t<Matched, Default, T>, Matched, Rest...> { };
 
-        // Public interface: match_t<Key, Alts...> → resulting type
+        // Public interface: match_t<Key, Alts...> -> resulting type
         template <auto Key, class... Alts>
         struct match {
             using type = typename match_impl<Key, void, false, Alts...>::type;
