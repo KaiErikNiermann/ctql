@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Program Listing for File macros.hpp &#8212; ctql  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=cb25574f" />
+    <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+    <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="program-listing-for-file-macros-hpp">
+<span id="program-listing-file-include-macros-hpp"></span><h1>Program Listing for File macros.hpp<a class="headerlink" href="#program-listing-for-file-macros-hpp" title="Link to this heading">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_include_macros.hpp.html#file-include-macros-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">include/macros.hpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// ctql/macros.hpp</span>
+<span class="cp">#pragma once</span>
+<span class="c1">// Public macro layer for ctql. Define CTQL_NO_MACROS to opt out entirely.</span>
+<span class="c1">// Define CTQL_ENABLE_DSL to also export `$...` shorthands (non-standard identifiers).</span>
+
+<span class="cp">#ifndef CTQL_NO_MACROS</span>
+
+<span class="c1">// ---- Core CTQL_* macros (portable, recommended) ----</span>
+<span class="cp">#define CTQL_TYPE_LIST(...)            ::ctql::detail::HTList&lt;__VA_ARGS__&gt;</span>
+<span class="cp">#define CTQL_APPEND(ListL, ListR)      typename ::ctql::detail::append&lt;ListL, ListR&gt;::type</span>
+
+<span class="c1">// Extractors</span>
+<span class="cp">#define CTQL_TO_TUPLE(List)            typename ::ctql::to_tuple&lt;List&gt;::type</span>
+<span class="cp">#define CTQL_TO_VARIANT(List)          typename ::ctql::to_variant&lt;List&gt;::type</span>
+<span class="cp">#define CTQL_TUPLE_T(...)              std::tuple&lt;__VA_ARGS__&gt;</span>
+
+<span class="c1">// Partition API</span>
+<span class="cp">#define CTQL_PARTITION_BY(Pivot, Rel, ...)   ::ctql::partition_by&lt;Pivot, Rel, __VA_ARGS__&gt;</span>
+<span class="cp">#define CTQL_PARTITION_PASS(Pivot, Rel, ...) typename CTQL_PARTITION_BY(Pivot, Rel, __VA_ARGS__)::pass</span>
+<span class="cp">#define CTQL_PARTITION_FAIL(Pivot, Rel, ...) typename CTQL_PARTITION_BY(Pivot, Rel, __VA_ARGS__)::fail</span>
+<span class="cp">#define CTQL_PARTITION_CONCAT(Pivot, Rel, ...) typename CTQL_PARTITION_BY(Pivot, Rel, __VA_ARGS__)::concat</span>
+<span class="cp">#define CTQL_PARTITION_BY_KEY(Pivot, Rel, KeyOf, ...) \</span>
+<span class="cp">    ::ctql::partition_by_key&lt;Pivot, Rel, KeyOf, __VA_ARGS__&gt;</span>
+
+<span class="c1">// Sorting (KeyOf&lt;T&gt; must provide: using type = T; static constexpr size)</span>
+<span class="cp">#define CTQL_SORT_TYPES(...)              ::ctql::TypeSort&lt;::ctql::Order::Asc, Size, __VA_ARGS__&gt;</span>
+<span class="cp">#define CTQL_SORT_TYPES_ASC(KeyOf, ...)   ::ctql::TypeSort&lt;::ctql::Order::Asc,  KeyOf, __VA_ARGS__&gt;</span>
+<span class="cp">#define CTQL_SORT_TYPES_DESC(KeyOf, ...)  ::ctql::TypeSort&lt;::ctql::Order::Desc, KeyOf, __VA_ARGS__&gt;</span>
+
+<span class="c1">// Reducers over `.size`</span>
+<span class="cp">#define CTQL_REDUCE_SIZES(Op, Init, ...)  (::ctql::reduce_sizes_v&lt;Op, Init, __VA_ARGS__&gt;)</span>
+<span class="cp">#define CTQL_SUM_SIZES(...)               (::ctql::Sum_v&lt;__VA_ARGS__&gt;)</span>
+
+<span class="c1">// Matching</span>
+<span class="cp">#define CTQL_MATCH(arg, ...)               std::invoke(ctql::match {__VA_ARGS__}, arg)</span>
+
+<span class="c1">// Operation</span>
+<span class="cp">#define CTQL_OP(str)                      ctql::op_type&lt;str##_ct&gt;::template pred</span>
+
+<span class="c1">// Predicates</span>
+<span class="cp">#define CTQL_SIZE_OF(...)              ctql::SizeOf_t&lt;__VA_ARGS__&gt;</span>
+<span class="cp">#define CTQL_ALIGN_OF(...)            ctql::AlignOf_t&lt;__VA_ARGS__&gt;</span>
+<span class="cp">#define CTQL_APPLY(S, ...)         ctql::Apply&lt;S, __VA_ARGS__&gt;</span>
+
+<span class="c1">// Convenience for defining a &quot;size&quot; in wrappers or pivots</span>
+<span class="cp">#define CTQL_SIZE(n) static constexpr std::size_t size = (n);</span>
+
+<span class="cp">#  ifdef CTQL_ENABLE_DSL</span>
+<span class="w">    </span><span class="c1">// Lists / transforms</span>
+<span class="cp">#   define $type_list(...)          CTQL_TYPE_LIST(__VA_ARGS__)</span>
+<span class="cp">#   define $to_tuple(List)          CTQL_TO_TUPLE(List)</span>
+<span class="cp">#   define $to_variant(List)        CTQL_TO_VARIANT(List)</span>
+<span class="cp">#   define $tuple_t(...)            CTQL_TUPLE_T(__VA_ARGS__)</span>
+
+<span class="w">    </span><span class="c1">// Partition helpers</span>
+<span class="cp">#   define $partition_by(Pivot, Rel, ...)   CTQL_PARTITION_CONCAT(Pivot, Rel, __VA_ARGS__)</span>
+<span class="cp">#   define $filter_by(Pivot, Rel, ...)      CTQL_PARTITION_PASS(Pivot, Rel, __VA_ARGS__)</span>
+<span class="cp">#   define $reject_if_by(Pivot, Rel, ...)   CTQL_PARTITION_FAIL(Pivot, Rel, __VA_ARGS__)</span>
+
+<span class="w">    </span><span class="c1">// Sorting short-hands (defaults to ascending)</span>
+<span class="cp">#   define $sort_types(...)             CTQL_TO_TUPLE(CTQL_SORT_TYPES(__VA_ARGS__))</span>
+<span class="cp">#   define $sort_types_by(KeyOf, ...)   CTQL_TO_TUPLE(CTQL_SORT_TYPES_ASC(KeyOf, __VA_ARGS__))</span>
+<span class="cp">#   define $sort_types_desc(KeyOf, ...) CTQL_TO_TUPLE(CTQL_SORT_TYPES_DESC(KeyOf, __VA_ARGS__))</span>
+
+<span class="w">    </span><span class="c1">// Reducers</span>
+<span class="cp">#   define $reduce_sizes(...)         CTQL_REDUCE_SIZES(__VA_ARGS__)  </span><span class="c1">// (Op, Init, Ts...)</span>
+<span class="cp">#   define $sum_sizes(...)            CTQL_SUM_SIZES(__VA_ARGS__)     </span><span class="c1">// (Ts...)</span>
+<span class="cp">#   define $size(n)                   CTQL_SIZE(n)</span>
+
+<span class="w">    </span><span class="c1">// Matching</span>
+<span class="cp">#   define $match(arg, ...)           CTQL_MATCH(arg, __VA_ARGS__)</span>
+
+<span class="w">    </span><span class="c1">// Operation</span>
+<span class="cp">#   define $op(str)                   CTQL_OP(str)</span>
+
+<span class="w">    </span><span class="c1">// Predicates</span>
+<span class="cp">#   define $size_of(...)              CTQL_SIZE_OF(__VA_ARGS__)</span>
+<span class="cp">#   define $align_of(...)             CTQL_ALIGN_OF(__VA_ARGS__)</span>
+<span class="cp">#   define $apply(S, ...)             CTQL_APPLY(S, __VA_ARGS__)</span>
+
+<span class="cp">#  endif </span><span class="c1">// CTQL_ENABLE_DSL</span>
+
+<span class="cp">#endif </span><span class="c1">// CTQL_NO_MACROS</span>
+</pre></div>
+</div>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">ctql</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">ctql API</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2025, Kai Erik Niermann.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/api/program_listing_file_include_macros.hpp.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

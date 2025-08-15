@@ -1,0 +1,14 @@
+.. _exhale_define_macros_8hpp_1a9885b2114cd4270c6856986a13f8f977:
+
+Define CTQL_MATCH
+=================
+
+- Defined in :ref:`file_include_macros.hpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: CTQL_MATCH
+   :project: ctql

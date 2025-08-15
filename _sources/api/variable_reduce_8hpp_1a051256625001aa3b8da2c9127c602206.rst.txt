@@ -1,0 +1,14 @@
+.. _exhale_variable_reduce_8hpp_1a051256625001aa3b8da2c9127c602206:
+
+Variable ctql::Sum_v
+====================
+
+- Defined in :ref:`file_include_reduce.hpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: ctql::Sum_v
+   :project: ctql
